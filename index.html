@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Educativo: Teoría Cinética y Leyes de los Gases</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #131b2e;
+            --accent: #38bdf8;
+            --accent-hover: #0ea5e9;
+            --orange: #f97316;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            padding: 1.2rem 2rem;
+            background: rgba(19, 27, 46, 0.9);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            background: var(--bg-color);
+            padding: 0.3rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-main);
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            color: #0f172a;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);
+        }
+
+        main {
+            flex: 1;
+            display: none;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        main.active {
+            display: grid;
+        }
+
+        @media (max-width: 968px) {
+            main.active {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .description {
+            color: var(--text-muted);
+            font-size: 0.93rem;
+            line-height: 1.6;
+        }
+
+        .controls-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            background: rgba(11, 15, 25, 0.4);
+            padding: 1rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+        }
+
+        .control-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            flex: 1;
+            background: var(--bg-color);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            color: var(--text-main);
+            border-color: var(--accent);
+        }
+
+        .action-btn.active {
+            background: var(--accent);
+            color: #0f172a;
+            border-color: var(--accent);
+            font-weight: 600;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            margin-top: 0.4rem;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem;
+        }
+
+        .metric-card {
+            background: rgba(11, 15, 25, 0.6);
+            border: 1px solid var(--border);
+            padding: 0.8rem;
+            border-radius: 0.75rem;
+            text-align: center;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.2rem;
+        }
+
+        .metric-value {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .simulation-container {
+            position: relative;
+            width: 100%;
+            height: 420px;
+            background: #07090f;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        .hint {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            text-align: center;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Simulador Cinético y Termodinámico</h1>
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab(1)">1. Teoría Cinética & Estados</button>
+            <button class="tab-btn" onclick="switchTab(2)">2. Leyes de los Gases</button>
+            <button class="tab-btn" onclick="switchTab(3)">3. Cambios de Fase (
