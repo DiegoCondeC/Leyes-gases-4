@@ -240,4 +240,343 @@
         <div class="nav-tabs">
             <button class="tab-btn active" onclick="switchTab(1)">1. Teoría Cinética & Estados</button>
             <button class="tab-btn" onclick="switchTab(2)">2. Leyes de los Gases</button>
-            <button class="tab-btn" onclick="switchTab(3)">3. Cambios de Fase (
+            <button class="tab-btn" onclick="switchTab(3)">3. Cambios de Fase (Agua)</button>
+        </div>
+    </header>
+
+    <!-- ================= PESTAÑA 1 ================= -->
+    <main id="tab-1" class="active">
+        <div class="panel">
+            <div>
+                <h2 class="section-title">Teoría Cinético-Molecular</h2>
+                <p class="description">La materia está compuesta por partículas en continuo movimiento. Su energía cinética determina el estado de agregación (sólido, líquido o gas).</p>
+            </div>
+            <div class="controls-group">
+                <span style="font-size: 0.9rem; font-weight: 500;">Seleccionar Estado de la Materia:</span>
+                <div class="btn-row">
+                    <button class="action-btn active" id="btn-solid" onclick="setMatterState('solid')">Sólido</button>
+                    <button class="action-btn" id="btn-liquid" onclick="setMatterState('liquid')">Líquido</button>
+                    <button class="action-btn" id="btn-gas" onclick="setMatterState('gas')">Gas</button>
+                </div>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Colisiones / seg</div>
+                    <div class="metric-value" id="t1-col">0</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Velocidad Media</div>
+                    <div class="metric-value" id="t1-vel">0.0 m/s</div>
+                </div>
+            </div>
+            <p class="hint">Observa cómo cambia el ordenamiento y la agitación molecular según el estado seleccionado.</p>
+        </div>
+        <div class="panel" style="justify-content: center; align-items: center;">
+            <div class="simulation-container">
+                <canvas id="canvas1" width="420" height="380"></canvas>
+            </div>
+            <p class="hint">Simulación molecular en tiempo real.</p>
+        </div>
+    </main>
+
+    <!-- ================= PESTAÑA 2 ================= -->
+    <main id="tab-2">
+        <div class="panel">
+            <div>
+                <h2 class="section-title" id="t2-title">Ley de Boyle (Isoterma)</h2>
+                <p class="description" id="t2-desc">A temperatura constante, el volumen de una masa fija de gas es inversamente proporcional a la presión.</p>
+            </div>
+            <div class="btn-row">
+                <button class="action-btn active" onclick="switchGasLaw('boyle')">Boyle (Tª cte)</button>
+                <button class="action-btn" onclick="switchGasLaw('charles')">Charles (Pª cte)</button>
+                <button class="action-btn" onclick="switchGasLaw('gay')">Gay-Lussac (Vº cte)</button>
+            </div>
+            <div class="controls-group">
+                <div class="control-row">
+                    <span id="t2-slider-label">Volumen (V)</span>
+                    <span id="t2-slider-val" style="color: var(--accent); font-weight: 600;">3.0 L</span>
+                </div>
+                <input type="range" id="t2-slider" min="1.0" max="5.0" step="0.1" value="3.0" oninput="updateGasLaw(this.value)">
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Presión (P)</div>
+                    <div class="metric-value" id="t2-p">1.00 atm</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Volumen (V)</div>
+                    <div class="metric-value" id="t2-v">3.0 L</div>
+                </div>
+                <div class="metric-card" style="grid-column: span 2;">
+                    <div class="metric-label">Temperatura (T)</div>
+                    <div class="metric-value" id="t2-t">300 K</div>
+                </div>
+            </div>
+            <p class="hint" id="t2-hint">Mueve el émbolo para modificar el volumen y observa la presión resultante.</p>
+        </div>
+        <div class="panel" style="justify-content: center; align-items: center;">
+            <div class="simulation-container">
+                <canvas id="canvas2" width="420" height="380"></canvas>
+            </div>
+            <p class="hint">Recipiente con émbolo móvil y partículas colisionando.</p>
+        </div>
+    </main>
+
+    <!-- ================= PESTAÑA 3 ================= -->
+    <main id="tab-3">
+        <div class="panel">
+            <div>
+                <h2 class="section-title">Cambios de Estado Térmico (Agua)</h2>
+                <p class="description">Varía la temperatura para experimentar las transiciones de fase: Hielo, Fusión, Líquido, Vaporización y Gas.</p>
+            </div>
+            <div class="controls-group">
+                <div class="control-row">
+                    <span>Temperatura del Sistema</span>
+                    <span id="t3-temp-val" style="color: var(--accent); font-weight: 600;">20 °C</span>
+                </div>
+                <input type="range" min="-20" max="120" step="1" value="20" oninput="updateWaterPhase(this.value)">
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-card" style="grid-column: span 2;">
+                    <div class="metric-label">Fase Actual</div>
+                    <div class="metric-value" id="t3-phase" style="color: var(--orange);">Agua Líquida</div>
+                </div>
+            </div>
+            <p class="hint">Observa la estructura molecular al pasar por 0 °C (fusión) y 100 °C (ebullición).</p>
+        </div>
+        <div class="panel" style="justify-content: center; align-items: center;">
+            <div class="simulation-container">
+                <canvas id="canvas3" width="420" height="380"></canvas>
+            </div>
+            <p class="hint">Visualización molecular del estado térmico del agua.</p>
+        </div>
+    </main>
+
+    <script>
+        // --- Navegación entre pestañas ---
+        function switchTab(tabNum) {
+            document.querySelectorAll('main').forEach(m => m.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`tab-${tabNum}`).classList.add('active');
+            document.querySelectorAll('.tab-btn')[tabNum - 1].classList.add('active');
+        }
+
+        // --- Partícula común ---
+        class Particle {
+            constructor(x, y, vx, vy, radius = 5, color = '#38bdf8') {
+                this.x = x; this.y = y; this.vx = vx; this.vy = vy;
+                this.radius = radius; this.color = color;
+                this.baseX = x; this.baseY = y;
+            }
+            update(bounds, speedFactor = 1) {
+                this.x += this.vx * speedFactor;
+                this.y += this.vy * speedFactor;
+                if (this.x - this.radius < bounds.left) { this.x = bounds.left + this.radius; this.vx *= -1; return true; }
+                if (this.x + this.radius > bounds.right) { this.x = bounds.right - this.radius; this.vx *= -1; return true; }
+                if (this.y - this.radius < bounds.top) { this.y = bounds.top + this.radius; this.vy *= -1; return true; }
+                if (this.y + this.radius > bounds.bottom) { this.y = bounds.bottom - this.radius; this.vy *= -1; return true; }
+                return false;
+            }
+            draw(ctx) {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+            }
+        }
+
+        // ================= PESTAÑA 1 LOGICA =================
+        let t1State = 'solid';
+        let particles1 = [];
+        let colCount1 = 0;
+        let timer1 = 0;
+
+        function initT1() {
+            particles1 = [];
+            for (let i = 0; i < 35; i++) {
+                let x = 60 + (i % 7) * 45 + Math.random() * 10;
+                let y = 80 + Math.floor(i / 7) * 45 + Math.random() * 10;
+                particles1.push(new Particle(x, y, (Math.random() - 0.5) * 2, (Math.random() - 0.5) * 2, 6, '#38bdf8'));
+            }
+        }
+        initT1();
+
+        function setMatterState(state) {
+            t1State = state;
+            ['solid', 'liquid', 'gas'].forEach(s => document.getElementById(`btn-${s}`).classList.remove('active'));
+            document.getElementById(`btn-${state}`).classList.add('active');
+        }
+
+        function runT1(ctx) {
+            ctx.clearRect(0, 0, 420, 380);
+            ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3;
+            ctx.strokeRect(40, 40, 340, 300);
+
+            let bounds = { left: 40, right: 380, top: 40, bottom: 340 };
+            let speedFactor = 1;
+            let collisionsThisFrame = 0;
+            let totalSpeed = 0;
+
+            if (t1State === 'solid') {
+                speedFactor = 0.3;
+                particles1.forEach((p, idx) => {
+                    p.x = p.baseX + Math.sin(Date.now() * 0.01 + idx) * 3;
+                    p.y = p.baseY + Math.cos(Date.now() * 0.01 + idx) * 3;
+                    p.draw(ctx);
+                    totalSpeed += 0.5;
+                });
+            } else if (t1State === 'liquid') {
+                speedFactor = 1.2;
+                particles1.forEach(p => {
+                    if (p.y > 320) p.y = 320;
+                    if (p.update(bounds, speedFactor)) collisionsThisFrame++;
+                    totalSpeed += Math.hypot(p.vx, p.vy) * speedFactor;
+                    p.draw(ctx);
+                });
+            } else {
+                speedFactor = 2.5;
+                particles1.forEach(p => {
+                    if (p.update(bounds, speedFactor)) collisionsThisFrame++;
+                    totalSpeed += Math.hypot(p.vx, p.vy) * speedFactor;
+                    p.draw(ctx);
+                });
+            }
+
+            colCount1 += collisionsThisFrame;
+            timer1++;
+            if (timer1 >= 30) {
+                document.getElementById('t1-col').textContent = Math.round((colCount1 * 2) * (t1State==='solid'?0.1:1));
+                document.getElementById('t1-vel').textContent = (totalSpeed / particles1.length).toFixed(1) + ' m/s';
+                colCount1 = 0; timer1 = 0;
+            }
+        }
+
+        // ================= PESTAÑA 2 LOGICA =================
+        let gasLaw = 'boyle';
+        let volume2 = 3.0;
+        let temperature2 = 300;
+        let pressure2 = 1.0;
+        let particles2 = [];
+
+        for(let i=0; i<30; i++) {
+            particles2.push(new Particle(60 + Math.random()*280, 100 + Math.random()*200, (Math.random()-0.5)*3, (Math.random()-0.5)*3, 5, '#f97316'));
+        }
+
+        function switchGasLaw(law) {
+            gasLaw = law;
+            const title = document.getElementById('t2-title');
+            const desc = document.getElementById('t2-desc');
+            const slider = document.getElementById('t2-slider');
+            const label = document.getElementById('t2-slider-label');
+
+            if(law === 'boyle') {
+                title.textContent = "Ley de Boyle (Isoterma)";
+                desc.textContent = "A temperatura constante, el volumen es inversamente proporcional a la presión.";
+                label.textContent = "Volumen (V)";
+                slider.min = "1.0"; slider.max = "5.0"; slider.step = "0.1"; slider.value = "3.0";
+                volume2 = 3.0; temperature2 = 300;
+            } else if(law === 'charles') {
+                title.textContent = "Ley de Charles (Isobárica)";
+                desc.textContent = "A presión constante, el volumen es directamente proporcional a la temperatura absoluta.";
+                label.textContent = "Temperatura (T)";
+                slider.min = "150"; slider.max = "500"; slider.step = "10"; slider.value = "300";
+                temperature2 = 300; pressure2 = 1.0;
+            } else {
+                title.textContent = "Ley de Gay-Lussac (Isocora)";
+                desc.textContent = "A volumen constante, la presión es directamente proporcional a la temperatura absoluta.";
+                label.textContent = "Temperatura (T)";
+                slider.min = "150"; slider.max = "500"; slider.step = "10"; slider.value = "300";
+                temperature2 = 300; volume2 = 3.0;
+            }
+            updateGasLaw(slider.value);
+        }
+
+        function updateGasLaw(val) {
+            val = parseFloat(val);
+            if(gasLaw === 'boyle') {
+                volume2 = val;
+                temperature2 = 300;
+                pressure2 = +(3.0 / volume2).toFixed(2);
+                document.getElementById('t2-slider-val').textContent = volume2.toFixed(1) + ' L';
+            } else if(gasLaw === 'charles') {
+                temperature2 = val;
+                pressure2 = 1.0;
+                volume2 = +(1.0 + (temperature2 - 150) / 100).toFixed(2);
+                document.getElementById('t2-slider-val').textContent = temperature2 + ' K';
+            } else {
+                temperature2 = val;
+                volume2 = 3.0;
+                pressure2 = +(temperature2 / 300).toFixed(2);
+                document.getElementById('t2-slider-val').textContent = temperature2 + ' K';
+            }
+            document.getElementById('t2-p').textContent = pressure2 + ' atm';
+            document.getElementById('t2-v').textContent = volume2.toFixed(1) + ' L';
+            document.getElementById('t2-t').textContent = temperature2 + ' K';
+        }
+
+        function runT2(ctx) {
+            ctx.clearRect(0, 0, 420, 380);
+            let containerHeight = 80 + (volume2 / 5.0) * 220;
+            let topWall = 340 - containerHeight;
+
+            ctx.strokeStyle = '#f97316'; ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(50, 340); ctx.lineTo(50, topWall);
+            ctx.moveTo(370, 340); ctx.lineTo(370, topWall);
+            ctx.moveTo(50, 340); ctx.lineTo(370, 340);
+            ctx.stroke();
+
+            ctx.fillStyle = '#ea580c';
+            ctx.fillRect(45, topWall - 10, 330, 10);
+
+            let bounds = { left: 52, right: 368, top: topWall, bottom: 338 };
+            let speedFactor = Math.sqrt(temperature2 / 300);
+
+            particles2.forEach(p => {
+                p.update(bounds, speedFactor);
+                p.draw(ctx);
+            });
+        }
+
+        // ================= PESTAÑA 3 LOGICA =================
+        let waterTemp = 20;
+        let particles3 = [];
+        for(let i=0; i<30; i++) {
+            particles3.push(new Particle(80 + Math.random()*260, 150 + Math.random()*150, (Math.random()-0.5)*2, (Math.random()-0.5)*2, 6, '#38bdf8'));
+        }
+
+        function updateWaterPhase(val) {
+            waterTemp = parseInt(val);
+            document.getElementById('t3-temp-val').textContent = waterTemp + ' °C';
+            let phaseStr = "Agua Líquida";
+            if (waterTemp < 0) phaseStr = "Hielo / Sólido";
+            else if (waterTemp === 0) phaseStr = "Fusión (Hielo ⇌ Líquido)";
+            else if (waterTemp > 0 && waterTemp < 100) phaseStr = "Agua Líquida";
+            else if (waterTemp === 100) phaseStr = "Vaporización (Líquido ⇌ Gas)";
+            else phaseStr = "Vapor de Agua / Gas";
+
+            document.getElementById('t3-phase').textContent = phaseStr;
+        }
+
+        function runT3(ctx) {
+            ctx.clearRect(0, 0, 420, 380);
+            ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3;
+            ctx.strokeRect(60, 60, 300, 260);
+
+            let bounds = { left: 62, right: 358, top: 62, bottom: 318 };
+            let speedFactor = Math.max(0.2, (waterTemp + 25) / 50);
+
+            particles3.forEach((p, idx) => {
+                if (waterTemp < 0) {
+                    p.x = 90 + (idx % 6) * 45;
+                    p.y = 90 + Math.floor(idx / 6) * 40;
+                    p.draw(ctx);
+                } else {
+                    p.update(bounds, speedFactor);
+                    p.draw(ctx);
+                }
+            });
+        }
+
+        //
