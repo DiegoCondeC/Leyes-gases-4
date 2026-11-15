@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador Educativo: Teoría Cinética y Leyes de los Gases</title>
+    <title>Laboratorio Virtual: Teoría Cinética y Gases</title>
     <style>
         :root {
-            --bg-color: #0b0f19;
-            --card-bg: #131b2e;
-            --accent: #38bdf8;
-            --accent-hover: #0ea5e9;
-            --orange: #f97316;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border: #1e293b;
+            --bg-dark: #090d16;
+            --bg-card: #131c2e;
+            --bg-panel: #1e293b;
+            --accent-blue: #38bdf8;
+            --accent-orange: #f97316;
+            --accent-purple: #a855f7;
+            --text-light: #f8fafc;
+            --text-dim: #94a3b8;
+            --border-color: #334155;
         }
 
         * {
@@ -24,210 +25,259 @@
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            background-color: var(--bg-dark);
+            color: var(--text-light);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
         }
 
         header {
-            padding: 1.2rem 2rem;
-            background: rgba(19, 27, 46, 0.9);
-            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            background: rgba(19, 28, 46, 0.95);
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
             gap: 1rem;
-            backdrop-filter: blur(10px);
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 50;
+            backdrop-filter: blur(8px);
         }
 
-        h1 {
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
             font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--text-main);
+            font-weight: 700;
+            color: var(--text-light);
+        }
+
+        .brand-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            box-shadow: 0 0 10px var(--accent-blue);
         }
 
         .nav-tabs {
             display: flex;
-            gap: 0.5rem;
-            background: var(--bg-color);
-            padding: 0.3rem;
+            gap: 0.4rem;
+            background: var(--bg-dark);
+            padding: 0.35rem;
             border-radius: 0.75rem;
-            border: 1px solid var(--border);
+            border: 1px solid var(--border-color);
+            flex-wrap: wrap;
         }
 
         .tab-btn {
             background: transparent;
             border: none;
-            color: var(--text-muted);
-            padding: 0.5rem 1rem;
+            color: var(--text-dim);
+            padding: 0.6rem 1.1rem;
             font-size: 0.9rem;
-            font-weight: 500;
+            font-weight: 600;
             border-radius: 0.5rem;
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
         .tab-btn:hover {
-            color: var(--text-main);
+            color: var(--text-light);
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .tab-btn.active {
-            background: var(--accent);
-            color: #0f172a;
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);
+            background: var(--accent-blue);
+            color: #090d16;
+            box-shadow: 0 2px 10px rgba(56, 189, 248, 0.3);
         }
 
-        main {
-            flex: 1;
+        .tab-content {
             display: none;
-            grid-template-columns: 1fr 1.2fr;
+            grid-template-columns: 1fr 1.15fr;
             gap: 2rem;
             padding: 2rem;
-            max-width: 1400px;
+            max-width: 1350px;
             margin: 0 auto;
             width: 100%;
+            flex: 1;
         }
 
-        main.active {
+        .tab-content.active {
             display: grid;
         }
 
-        @media (max-width: 968px) {
-            main.active {
+        @media (max-width: 980px) {
+            .tab-content.active {
                 grid-template-columns: 1fr;
+                padding: 1rem;
             }
         }
 
-        .panel {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
             border-radius: 1rem;
-            padding: 1.8rem;
+            padding: 1.75rem;
             display: flex;
             flex-direction: column;
-            gap: 1.2rem;
+            gap: 1.25rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         }
 
-        .section-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--text-main);
+        .card-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 0.4rem;
         }
 
-        .description {
-            color: var(--text-muted);
-            font-size: 0.93rem;
+        .card-desc {
+            color: var(--text-dim);
+            font-size: 0.95rem;
             line-height: 1.6;
         }
 
-        .controls-group {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            background: rgba(11, 15, 25, 0.4);
-            padding: 1rem;
-            border-radius: 0.75rem;
-            border: 1px solid var(--border);
+        .formula-badge {
+            background: rgba(56, 189, 248, 0.1);
+            border-left: 4px solid var(--accent-blue);
+            padding: 0.85rem 1rem;
+            border-radius: 0 0.5rem 0.5rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--accent-blue);
         }
 
-        .control-row {
+        .formula-badge.orange {
+            background: rgba(249, 115, 22, 0.1);
+            border-left-color: var(--accent-orange);
+            color: var(--accent-orange);
+        }
+
+        .control-box {
+            background: rgba(9, 13, 22, 0.6);
+            border: 1px solid var(--border-color);
+            padding: 1.1rem;
+            border-radius: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.6rem;
+        }
+
+        .mode-btn {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            color: var(--text-dim);
+            padding: 0.65rem 0.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .mode-btn:hover {
+            border-color: var(--text-light);
+            color: var(--text-light);
+        }
+
+        .mode-btn.active-blue {
+            background: var(--accent-blue);
+            color: #090d16;
+            border-color: var(--accent-blue);
+        }
+
+        .mode-btn.active-orange {
+            background: var(--accent-orange);
+            color: #090d16;
+            border-color: var(--accent-orange);
+        }
+
+        .slider-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-size: 0.9rem;
-        }
-
-        .btn-row {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .action-btn {
-            flex: 1;
-            background: var(--bg-color);
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-            padding: 0.5rem;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: all 0.2s;
-        }
-
-        .action-btn:hover {
-            color: var(--text-main);
-            border-color: var(--accent);
-        }
-
-        .action-btn.active {
-            background: var(--accent);
-            color: #0f172a;
-            border-color: var(--accent);
             font-weight: 600;
+        }
+
+        .slider-val {
+            color: var(--accent-blue);
+            font-weight: 700;
+            font-size: 1rem;
         }
 
         input[type="range"] {
             width: 100%;
-            margin-top: 0.4rem;
-            accent-color: var(--accent);
+            height: 6px;
+            border-radius: 5px;
+            accent-color: var(--accent-blue);
             cursor: pointer;
         }
 
-        .metrics-grid {
+        .metrics-row {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.8rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
         }
 
-        .metric-card {
-            background: rgba(11, 15, 25, 0.6);
-            border: 1px solid var(--border);
-            padding: 0.8rem;
+        .metric-box {
+            background: rgba(9, 13, 22, 0.75);
+            border: 1px solid var(--border-color);
+            padding: 0.9rem 0.5rem;
             border-radius: 0.75rem;
             text-align: center;
         }
 
-        .metric-label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
+        .metric-title {
+            font-size: 0.72rem;
+            color: var(--text-dim);
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            margin-bottom: 0.2rem;
+            margin-bottom: 0.35rem;
         }
 
-        .metric-value {
-            font-size: 1.15rem;
-            font-weight: 600;
-            color: var(--accent);
+        .metric-num {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-light);
         }
 
-        .simulation-container {
-            position: relative;
+        .canvas-wrapper {
             width: 100%;
             height: 420px;
-            background: #07090f;
+            background: #060911;
+            border: 1px solid var(--border-color);
             border-radius: 0.75rem;
-            border: 1px solid var(--border);
-            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
+            overflow: hidden;
         }
 
         canvas {
             display: block;
+            max-width: 100%;
         }
 
-        .hint {
+        .footer-note {
             font-size: 0.82rem;
-            color: var(--text-muted);
+            color: var(--text-dim);
             text-align: center;
             font-style: italic;
         }
@@ -236,347 +286,638 @@
 <body>
 
     <header>
-        <h1>Simulador Cinético y Termodinámico</h1>
+        <div class="brand">
+            <div class="brand-dot"></div>
+            <span>Física y Química: Simulador Molecular</span>
+        </div>
         <div class="nav-tabs">
-            <button class="tab-btn active" onclick="switchTab(1)">1. Teoría Cinética & Estados</button>
-            <button class="tab-btn" onclick="switchTab(2)">2. Leyes de los Gases</button>
-            <button class="tab-btn" onclick="switchTab(3)">3. Cambios de Fase (Agua)</button>
+            <button class="tab-btn active" onclick="openTab(1, this)">1. Teoría Cinética y Estados</button>
+            <button class="tab-btn" onclick="openTab(2, this)">2. Leyes de los Gases</button>
+            <button class="tab-btn" onclick="openTab(3, this)">3. Fases del Agua</button>
         </div>
     </header>
 
-    <!-- ================= PESTAÑA 1 ================= -->
-    <main id="tab-1" class="active">
-        <div class="panel">
+    <!-- ================= PESTAÑA 1: TEORÍA CINÉTICA ================= -->
+    <div id="tab-1" class="tab-content active">
+        <div class="card">
             <div>
-                <h2 class="section-title">Teoría Cinético-Molecular</h2>
-                <p class="description">La materia está compuesta por partículas en continuo movimiento. Su energía cinética determina el estado de agregación (sólido, líquido o gas).</p>
+                <h2 class="card-title">Teoría Cinético-Molecular</h2>
+                <p class="card-desc">Explica el comportamiento de la materia asumiendo que está formada por partículas en constante agitación. La temperatura mide su energía cinética media, y los impactos contra las paredes generan la presión.</p>
             </div>
-            <div class="controls-group">
-                <span style="font-size: 0.9rem; font-weight: 500;">Seleccionar Estado de la Materia:</span>
-                <div class="btn-row">
-                    <button class="action-btn active" id="btn-solid" onclick="setMatterState('solid')">Sólido</button>
-                    <button class="action-btn" id="btn-liquid" onclick="setMatterState('liquid')">Líquido</button>
-                    <button class="action-btn" id="btn-gas" onclick="setMatterState('gas')">Gas</button>
-                </div>
-            </div>
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-label">Colisiones / seg</div>
-                    <div class="metric-value" id="t1-col">0</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-label">Velocidad Media</div>
-                    <div class="metric-value" id="t1-vel">0.0 m/s</div>
-                </div>
-            </div>
-            <p class="hint">Observa cómo cambia el ordenamiento y la agitación molecular según el estado seleccionado.</p>
-        </div>
-        <div class="panel" style="justify-content: center; align-items: center;">
-            <div class="simulation-container">
-                <canvas id="canvas1" width="420" height="380"></canvas>
-            </div>
-            <p class="hint">Simulación molecular en tiempo real.</p>
-        </div>
-    </main>
 
-    <!-- ================= PESTAÑA 2 ================= -->
-    <main id="tab-2">
-        <div class="panel">
-            <div>
-                <h2 class="section-title" id="t2-title">Ley de Boyle (Isoterma)</h2>
-                <p class="description" id="t2-desc">A temperatura constante, el volumen de una masa fija de gas es inversamente proporcional a la presión.</p>
+            <div class="formula-badge" id="t1-info-box">
+                Sólido: Fuerzas de cohesión muy intensas. Vibración en red fija.
             </div>
-            <div class="btn-row">
-                <button class="action-btn active" onclick="switchGasLaw('boyle')">Boyle (Tª cte)</button>
-                <button class="action-btn" onclick="switchGasLaw('charles')">Charles (Pª cte)</button>
-                <button class="action-btn" onclick="switchGasLaw('gay')">Gay-Lussac (Vº cte)</button>
-            </div>
-            <div class="controls-group">
-                <div class="control-row">
-                    <span id="t2-slider-label">Volumen (V)</span>
-                    <span id="t2-slider-val" style="color: var(--accent); font-weight: 600;">3.0 L</span>
-                </div>
-                <input type="range" id="t2-slider" min="1.0" max="5.0" step="0.1" value="3.0" oninput="updateGasLaw(this.value)">
-            </div>
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-label">Presión (P)</div>
-                    <div class="metric-value" id="t2-p">1.00 atm</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-label">Volumen (V)</div>
-                    <div class="metric-value" id="t2-v">3.0 L</div>
-                </div>
-                <div class="metric-card" style="grid-column: span 2;">
-                    <div class="metric-label">Temperatura (T)</div>
-                    <div class="metric-value" id="t2-t">300 K</div>
-                </div>
-            </div>
-            <p class="hint" id="t2-hint">Mueve el émbolo para modificar el volumen y observa la presión resultante.</p>
-        </div>
-        <div class="panel" style="justify-content: center; align-items: center;">
-            <div class="simulation-container">
-                <canvas id="canvas2" width="420" height="380"></canvas>
-            </div>
-            <p class="hint">Recipiente con émbolo móvil y partículas colisionando.</p>
-        </div>
-    </main>
 
-    <!-- ================= PESTAÑA 3 ================= -->
-    <main id="tab-3">
-        <div class="panel">
+            <div class="control-box">
+                <span style="font-size: 0.9rem; font-weight: 600;">Estado de Agregación:</span>
+                <div class="btn-group">
+                    <button class="mode-btn active-blue" id="btn-st-solid" onclick="setStateT1('solid')">🧊 Sólido</button>
+                    <button class="mode-btn" id="btn-st-liquid" onclick="setStateT1('liquid')">💧 Líquido</button>
+                    <button class="mode-btn" id="btn-st-gas" onclick="setStateT1('gas')">💨 Gaseoso</button>
+                </div>
+
+                <div class="slider-header" style="margin-top: 0.5rem;">
+                    <span>Agitación Térmica (Temperatura)</span>
+                    <span class="slider-val" id="t1-temp-label">300 K</span>
+                </div>
+                <input type="range" id="t1-slider" min="100" max="600" value="300" oninput="updateT1Temp(this.value)">
+            </div>
+
+            <div class="metrics-row">
+                <div class="metric-box">
+                    <div class="metric-title">Colisiones / s</div>
+                    <div class="metric-num" id="t1-col" style="color: var(--accent-blue);">0</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Velocidad Media</div>
+                    <div class="metric-num" id="t1-vel" style="color: var(--accent-orange);">0 m/s</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Orden Molecular</div>
+                    <div class="metric-num" id="t1-order">Alto</div>
+                </div>
+            </div>
+
+            <p class="footer-note">Las líneas entre partículas representan las fuerzas atractivas intermoleculares.</p>
+        </div>
+
+        <div class="card" style="justify-content: center; align-items: center;">
+            <div class="canvas-wrapper">
+                <canvas id="canvas1" width="460" height="390"></canvas>
+            </div>
+            <p class="footer-note">Simulación en vivo del recipiente cerrado y colisiones en las paredes.</p>
+        </div>
+    </div>
+
+    <!-- ================= PESTAÑA 2: LEYES DE LOS GASES ================= -->
+    <div id="tab-2" class="tab-content">
+        <div class="card">
             <div>
-                <h2 class="section-title">Cambios de Estado Térmico (Agua)</h2>
-                <p class="description">Varía la temperatura para experimentar las transiciones de fase: Hielo, Fusión, Líquido, Vaporización y Gas.</p>
+                <h2 class="card-title" id="t2-title">Ley de Boyle-Mariotte (Isoterma)</h2>
+                <p class="card-desc" id="t2-desc">A temperatura constante, la presión ejercida por un gas es inversamente proporcional al volumen del recipiente que lo contiene.</p>
             </div>
-            <div class="controls-group">
-                <div class="control-row">
-                    <span>Temperatura del Sistema</span>
-                    <span id="t3-temp-val" style="color: var(--accent); font-weight: 600;">20 °C</span>
+
+            <div class="formula-badge orange" id="t2-formula">
+                P₁ · V₁ = P₂ · V₂   (Temperatura T = 300 K constante)
+            </div>
+
+            <div class="control-box">
+                <span style="font-size: 0.9rem; font-weight: 600;">Seleccionar Ley de los Gases:</span>
+                <div class="btn-group">
+                    <button class="mode-btn active-orange" id="btn-law-boyle" onclick="setLawT2('boyle')">Boyle (T cte)</button>
+                    <button class="mode-btn" id="btn-law-charles" onclick="setLawT2('charles')">Charles (P cte)</button>
+                    <button class="mode-btn" id="btn-law-gay" onclick="setLawT2('gay')">Gay-Lussac (V cte)</button>
                 </div>
-                <input type="range" min="-20" max="120" step="1" value="20" oninput="updateWaterPhase(this.value)">
+
+                <div class="slider-header" style="margin-top: 0.5rem;">
+                    <span id="t2-slider-title">Regular Volumen del Émbolo (V)</span>
+                    <span class="slider-val" id="t2-slider-val" style="color: var(--accent-orange);">3.0 L</span>
+                </div>
+                <input type="range" id="t2-slider" min="1.2" max="5.0" step="0.1" value="3.0" style="accent-color: var(--accent-orange);" oninput="updateT2Sim(this.value)">
             </div>
-            <div class="metrics-grid">
-                <div class="metric-card" style="grid-column: span 2;">
-                    <div class="metric-label">Fase Actual</div>
-                    <div class="metric-value" id="t3-phase" style="color: var(--orange);">Agua Líquida</div>
+
+            <div class="metrics-row">
+                <div class="metric-box">
+                    <div class="metric-title">Presión (P)</div>
+                    <div class="metric-num" id="t2-p" style="color: var(--accent-orange);">1.00 atm</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Volumen (V)</div>
+                    <div class="metric-num" id="t2-v" style="color: var(--accent-blue);">3.0 L</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Temperatura (T)</div>
+                    <div class="metric-num" id="t2-t">300 K</div>
                 </div>
             </div>
-            <p class="hint">Observa la estructura molecular al pasar por 0 °C (fusión) y 100 °C (ebullición).</p>
+
+            <p class="footer-note" id="t2-note">Al comprimir el émbolo a menos litros, el espacio se reduce y aumentan los choques.</p>
         </div>
-        <div class="panel" style="justify-content: center; align-items: center;">
-            <div class="simulation-container">
-                <canvas id="canvas3" width="420" height="380"></canvas>
+
+        <div class="card" style="justify-content: center; align-items: center;">
+            <div class="canvas-wrapper">
+                <canvas id="canvas2" width="460" height="390"></canvas>
             </div>
-            <p class="hint">Visualización molecular del estado térmico del agua.</p>
+            <p class="footer-note">Cilindro con émbolo móvil, manómetro e indicador en Litros reales.</p>
         </div>
-    </main>
+    </div>
+
+    <!-- ================= PESTAÑA 3: CAMBIOS DE ESTADO DEL AGUA ================= -->
+    <div id="tab-3" class="tab-content">
+        <div class="card">
+            <div>
+                <h2 class="card-title">Cambios de Estado del Agua (H₂O)</h2>
+                <p class="card-desc">Observa cómo varía la organización de las moléculas de agua desde los -20 °C hasta los 120 °C, atravesando los puntos críticos de fusión (0 °C) y ebullición (100 °C).</p>
+            </div>
+
+            <div class="formula-badge" id="t3-badge">
+                Fase actual: Agua Líquida (Puentes de hidrógeno dinámicos)
+            </div>
+
+            <div class="control-box">
+                <div class="slider-header">
+                    <span>Control de Temperatura (°C)</span>
+                    <span class="slider-val" id="t3-temp-display">25 °C</span>
+                </div>
+                <input type="range" id="t3-slider" min="-20" max="120" step="1" value="25" oninput="updateT3Water(this.value)">
+                <div class="btn-group" style="margin-top: 0.3rem;">
+                    <button class="mode-btn" onclick="setQuickWater(-15)">Hielo (-15°C)</button>
+                    <button class="mode-btn" onclick="setQuickWater(0)">Fusión (0°C)</button>
+                    <button class="mode-btn" onclick="setQuickWater(100)">Ebullición (100°C)</button>
+                </div>
+            </div>
+
+            <div class="metrics-row">
+                <div class="metric-box">
+                    <div class="metric-title">Estado Físico</div>
+                    <div class="metric-num" id="t3-state-txt" style="color: var(--accent-blue); font-size: 1rem;">Líquido</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Temp. Kelvin</div>
+                    <div class="metric-num" id="t3-kelvin">298 K</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Fuerzas Interm.</div>
+                    <div class="metric-num" id="t3-forces" style="font-size: 1rem;">Medias</div>
+                </div>
+            </div>
+
+            <p class="footer-note">En la parte inferior del lienzo se muestra la curva de calentamiento del agua en tiempo real.</p>
+        </div>
+
+        <div class="card" style="justify-content: center; align-items: center;">
+            <div class="canvas-wrapper">
+                <canvas id="canvas3" width="460" height="390"></canvas>
+            </div>
+            <p class="footer-note">Simulación microscópica superior y gráfica térmica inferior.</p>
+        </div>
+    </div>
 
     <script>
-        // --- Navegación entre pestañas ---
-        function switchTab(tabNum) {
-            document.querySelectorAll('main').forEach(m => m.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(`tab-${tabNum}`).classList.add('active');
-            document.querySelectorAll('.tab-btn')[tabNum - 1].classList.add('active');
+        // --- Cambio de Pestañas ---
+        function openTab(num, btn) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-' + num).classList.add('active');
+            btn.classList.add('active');
         }
 
-        // --- Partícula común ---
-        class Particle {
-            constructor(x, y, vx, vy, radius = 5, color = '#38bdf8') {
-                this.x = x; this.y = y; this.vx = vx; this.vy = vy;
-                this.radius = radius; this.color = color;
-                this.baseX = x; this.baseY = y;
-            }
-            update(bounds, speedFactor = 1) {
-                this.x += this.vx * speedFactor;
-                this.y += this.vy * speedFactor;
-                if (this.x - this.radius < bounds.left) { this.x = bounds.left + this.radius; this.vx *= -1; return true; }
-                if (this.x + this.radius > bounds.right) { this.x = bounds.right - this.radius; this.vx *= -1; return true; }
-                if (this.y - this.radius < bounds.top) { this.y = bounds.top + this.radius; this.vy *= -1; return true; }
-                if (this.y + this.radius > bounds.bottom) { this.y = bounds.bottom - this.radius; this.vy *= -1; return true; }
-                return false;
-            }
-            draw(ctx) {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.fill();
-                ctx.closePath();
-            }
-        }
-
-        // ================= PESTAÑA 1 LOGICA =================
+        // ================= LÓGICA PESTAÑA 1 =================
+        const c1 = document.getElementById('canvas1');
+        const ctx1 = c1.getContext('2d');
         let t1State = 'solid';
-        let particles1 = [];
-        let colCount1 = 0;
-        let timer1 = 0;
+        let t1Temp = 300;
+        let t1Particles = [];
+        let t1Collisions = 0;
+        let t1Frames = 0;
 
         function initT1() {
-            particles1 = [];
-            for (let i = 0; i < 35; i++) {
-                let x = 60 + (i % 7) * 45 + Math.random() * 10;
-                let y = 80 + Math.floor(i / 7) * 45 + Math.random() * 10;
-                particles1.push(new Particle(x, y, (Math.random() - 0.5) * 2, (Math.random() - 0.5) * 2, 6, '#38bdf8'));
+            t1Particles = [];
+            const cols = 7, rows = 5;
+            for (let i = 0; i < cols * rows; i++) {
+                let col = i % cols;
+                let row = Math.floor(i / cols);
+                let bx = 115 + col * 38;
+                let by = 180 + row * 35;
+                let angle = Math.random() * Math.PI * 2;
+                t1Particles.push({
+                    x: bx, y: by, baseX: bx, baseY: by,
+                    vx: Math.cos(angle) * 2.5,
+                    vy: Math.sin(angle) * 2.5,
+                    r: 7
+                });
             }
         }
         initT1();
 
-        function setMatterState(state) {
-            t1State = state;
-            ['solid', 'liquid', 'gas'].forEach(s => document.getElementById(`btn-${s}`).classList.remove('active'));
-            document.getElementById(`btn-${state}`).classList.add('active');
-        }
+        function setStateT1(st) {
+            t1State = st;
+            ['solid', 'liquid', 'gas'].forEach(s => {
+                document.getElementById('btn-st-' + s).classList.remove('active-blue');
+            });
+            document.getElementById('btn-st-' + st).classList.add('active-blue');
 
-        function runT1(ctx) {
-            ctx.clearRect(0, 0, 420, 380);
-            ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3;
-            ctx.strokeRect(40, 40, 340, 300);
-
-            let bounds = { left: 40, right: 380, top: 40, bottom: 340 };
-            let speedFactor = 1;
-            let collisionsThisFrame = 0;
-            let totalSpeed = 0;
-
-            if (t1State === 'solid') {
-                speedFactor = 0.3;
-                particles1.forEach((p, idx) => {
-                    p.x = p.baseX + Math.sin(Date.now() * 0.01 + idx) * 3;
-                    p.y = p.baseY + Math.cos(Date.now() * 0.01 + idx) * 3;
-                    p.draw(ctx);
-                    totalSpeed += 0.5;
-                });
-            } else if (t1State === 'liquid') {
-                speedFactor = 1.2;
-                particles1.forEach(p => {
-                    if (p.y > 320) p.y = 320;
-                    if (p.update(bounds, speedFactor)) collisionsThisFrame++;
-                    totalSpeed += Math.hypot(p.vx, p.vy) * speedFactor;
-                    p.draw(ctx);
-                });
+            const info = document.getElementById('t1-info-box');
+            const order = document.getElementById('t1-order');
+            if (st === 'solid') {
+                info.textContent = "Sólido: Fuerzas de cohesión muy intensas. Vibración en red cristalina fija.";
+                order.textContent = "Alto";
+            } else if (st === 'liquid') {
+                info.textContent = "Líquido: Partículas próximas pero sin posición fija. Fluyen y se adaptan al recipiente.";
+                order.textContent = "Medio";
             } else {
-                speedFactor = 2.5;
-                particles1.forEach(p => {
-                    if (p.update(bounds, speedFactor)) collisionsThisFrame++;
-                    totalSpeed += Math.hypot(p.vx, p.vy) * speedFactor;
-                    p.draw(ctx);
-                });
-            }
-
-            colCount1 += collisionsThisFrame;
-            timer1++;
-            if (timer1 >= 30) {
-                document.getElementById('t1-col').textContent = Math.round((colCount1 * 2) * (t1State==='solid'?0.1:1));
-                document.getElementById('t1-vel').textContent = (totalSpeed / particles1.length).toFixed(1) + ' m/s';
-                colCount1 = 0; timer1 = 0;
+                info.textContent = "Gaseoso: Fuerzas de atracción casi nulas. Movimiento libre, caótico y grandes choques.";
+                order.textContent = "Nulo";
             }
         }
 
-        // ================= PESTAÑA 2 LOGICA =================
-        let gasLaw = 'boyle';
-        let volume2 = 3.0;
-        let temperature2 = 300;
-        let pressure2 = 1.0;
-        let particles2 = [];
-
-        for(let i=0; i<30; i++) {
-            particles2.push(new Particle(60 + Math.random()*280, 100 + Math.random()*200, (Math.random()-0.5)*3, (Math.random()-0.5)*3, 5, '#f97316'));
+        function updateT1Temp(val) {
+            t1Temp = parseInt(val);
+            document.getElementById('t1-temp-label').textContent = t1Temp + ' K';
         }
 
-        function switchGasLaw(law) {
-            gasLaw = law;
+        function drawT1() {
+            ctx1.clearRect(0, 0, c1.width, c1.height);
+
+            // Recipiente
+            const box = { left: 50, right: 410, top: 40, bottom: 350 };
+            ctx1.strokeStyle = '#38bdf8';
+            ctx1.lineWidth = 3;
+            ctx1.strokeRect(box.left, box.top, box.right - box.left, box.bottom - box.top);
+
+            let speedMult = Math.sqrt(t1Temp / 300);
+            let frameCols = 0;
+            let sumSpeed = 0;
+
+            // Dibujar enlaces en sólido y líquido cercano
+            if (t1State === 'solid' || t1State === 'liquid') {
+                ctx1.strokeStyle = t1State === 'solid' ? 'rgba(56, 189, 248, 0.45)' : 'rgba(56, 189, 248, 0.18)';
+                ctx1.lineWidth = 1.5;
+                for (let i = 0; i < t1Particles.length; i++) {
+                    for (let j = i + 1; j < t1Particles.length; j++) {
+                        let d = Math.hypot(t1Particles[i].x - t1Particles[j].x, t1Particles[i].y - t1Particles[j].y);
+                        let maxDist = t1State === 'solid' ? 46 : 38;
+                        if (d < maxDist) {
+                            ctx1.beginPath();
+                            ctx1.moveTo(t1Particles[i].x, t1Particles[i].y);
+                            ctx1.lineTo(t1Particles[j].x, t1Particles[j].y);
+                            ctx1.stroke();
+                        }
+                    }
+                }
+            }
+
+            t1Particles.forEach((p, idx) => {
+                if (t1State === 'solid') {
+                    let amp = 2.5 * speedMult;
+                    p.x = p.baseX + Math.sin(Date.now() * 0.015 * speedMult + idx) * amp;
+                    p.y = p.baseY + Math.cos(Date.now() * 0.018 * speedMult + idx) * amp;
+                    sumSpeed += 40 * speedMult;
+                } else if (t1State === 'liquid') {
+                    p.vy += 0.08; // gravedad hacia el fondo
+                    p.x += p.vx * speedMult * 0.85;
+                    p.y += p.vy * speedMult * 0.85;
+
+                    if (p.y < 210) p.vy += 0.15;
+                    if (p.x - p.r < box.left) { p.x = box.left + p.r; p.vx *= -1; frameCols++; }
+                    if (p.x + p.r > box.right) { p.x = box.right - p.r; p.vx *= -1; frameCols++; }
+                    if (p.y - p.r < box.top) { p.y = box.top + p.r; p.vy *= -1; frameCols++; }
+                    if (p.y + p.r > box.bottom) {
+                        p.y = box.bottom - p.r;
+                        p.vy = -Math.abs(p.vy) * 0.9;
+                        frameCols++;
+                    }
+                    // Límite de velocidad líquida
+                    let spd = Math.hypot(p.vx, p.vy);
+                    if (spd > 3) { p.vx = (p.vx / spd) * 2.5; p.vy = (p.vy / spd) * 2.5; }
+                    sumSpeed += 180 * speedMult;
+                } else {
+                    p.x += p.vx * speedMult * 1.9;
+                    p.y += p.vy * speedMult * 1.9;
+                    if (p.x - p.r < box.left) { p.x = box.left + p.r; p.vx *= -1; frameCols++; }
+                    if (p.x + p.r > box.right) { p.x = box.right - p.r; p.vx *= -1; frameCols++; }
+                    if (p.y - p.r < box.top) { p.y = box.top + p.r; p.vy *= -1; frameCols++; }
+                    if (p.y + p.r > box.bottom) { p.y = box.bottom - p.r; p.vy *= -1; frameCols++; }
+                    sumSpeed += 480 * speedMult;
+                }
+
+                ctx1.beginPath();
+                ctx1.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx1.fillStyle = t1State === 'gas' ? '#f97316' : '#38bdf8';
+                ctx1.fill();
+            });
+
+            t1Collisions += frameCols;
+            t1Frames++;
+            if (t1Frames >= 25) {
+                let colPerSec = t1State === 'solid' ? Math.round(2 * speedMult) : Math.round(t1Collisions * 2.4);
+                document.getElementById('t1-col').textContent = colPerSec;
+                document.getElementById('t1-vel').textContent = Math.round(sumSpeed / t1Particles.length) + ' m/s';
+                t1Collisions = 0;
+                t1Frames = 0;
+            }
+        }
+
+        // ================= LÓGICA PESTAÑA 2 =================
+        const c2 = document.getElementById('canvas2');
+        const ctx2 = c2.getContext('2d');
+        let t2Law = 'boyle';
+        let t2Vol = 3.0;  // Litros (1.2 a 5.0 L)
+        let t2Temp = 300; // Kelvin
+        let t2Pres = 1.0; // atm
+        let t2Particles = [];
+
+        for (let i = 0; i < 32; i++) {
+            let a = Math.random() * Math.PI * 2;
+            t2Particles.push({
+                x: 110 + Math.random() * 240,
+                y: 160 + Math.random() * 170,
+                vx: Math.cos(a) * 2.6,
+                vy: Math.sin(a) * 2.6,
+                r: 5.5
+            });
+        }
+
+        function setLawT2(law) {
+            t2Law = law;
+            ['boyle', 'charles', 'gay'].forEach(l => {
+                document.getElementById('btn-law-' + l).classList.remove('active-orange');
+            });
+            document.getElementById('btn-law-' + law).classList.add('active-orange');
+
             const title = document.getElementById('t2-title');
             const desc = document.getElementById('t2-desc');
+            const form = document.getElementById('t2-formula');
+            const sTitle = document.getElementById('t2-slider-title');
             const slider = document.getElementById('t2-slider');
-            const label = document.getElementById('t2-slider-label');
+            const note = document.getElementById('t2-note');
 
-            if(law === 'boyle') {
-                title.textContent = "Ley de Boyle (Isoterma)";
-                desc.textContent = "A temperatura constante, el volumen es inversamente proporcional a la presión.";
-                label.textContent = "Volumen (V)";
-                slider.min = "1.0"; slider.max = "5.0"; slider.step = "0.1"; slider.value = "3.0";
-                volume2 = 3.0; temperature2 = 300;
-            } else if(law === 'charles') {
-                title.textContent = "Ley de Charles (Isobárica)";
-                desc.textContent = "A presión constante, el volumen es directamente proporcional a la temperatura absoluta.";
-                label.textContent = "Temperatura (T)";
-                slider.min = "150"; slider.max = "500"; slider.step = "10"; slider.value = "300";
-                temperature2 = 300; pressure2 = 1.0;
+            if (law === 'boyle') {
+                title.textContent = "Ley de Boyle-Mariotte (Proceso Isotermo)";
+                desc.textContent = "A temperatura constante, la presión de un gas es inversamente proporcional a su volumen en Litros.";
+                form.textContent = "P₁ · V₁ = P₂ · V₂   (Temperatura T = 300 K constante)";
+                sTitle.textContent = "Regular Volumen del Émbolo (Litros)";
+                note.textContent = "Al comprimir el volumen (L), las partículas recorren menos distancia y chocan mucho más.";
+                slider.min = "1.2"; slider.max = "5.0"; slider.step = "0.1"; slider.value = "3.0";
+                updateT2Sim(3.0);
+            } else if (law === 'charles') {
+                title.textContent = "Ley de Charles (Proceso Isobárico)";
+                desc.textContent = "A presión constante, el volumen ocupado por el gas es directamente proporcional a su temperatura absoluta.";
+                form.textContent = "V₁ / T₁ = V₂ / T₂   (Presión P = 1.00 atm constante)";
+                sTitle.textContent = "Regular Temperatura Absoluta (K)";
+                note.textContent = "Al calentar el gas, el émbolo sube automáticamente aumentando los Litros para mantener P = 1 atm.";
+                slider.min = "150"; slider.max = "500"; slider.step = "5"; slider.value = "300";
+                updateT2Sim(300);
             } else {
-                title.textContent = "Ley de Gay-Lussac (Isocora)";
-                desc.textContent = "A volumen constante, la presión es directamente proporcional a la temperatura absoluta.";
-                label.textContent = "Temperatura (T)";
-                slider.min = "150"; slider.max = "500"; slider.step = "10"; slider.value = "300";
-                temperature2 = 300; volume2 = 3.0;
+                title.textContent = "Ley de Gay-Lussac (Proceso Isócoro)";
+                desc.textContent = "A volumen constante (recipiente bloqueado), la presión es directamente proporcional a la temperatura absoluta.";
+                form.textContent = "P₁ / T₁ = P₂ / T₂   (Volumen V = 3.0 L constante)";
+                sTitle.textContent = "Regular Temperatura Absoluta (K)";
+                note.textContent = "El émbolo está fijo en 3.0 L. Al subir la temperatura, los impactos contra las paredes se disparan.";
+                slider.min = "150"; slider.max = "550"; slider.step = "5"; slider.value = "300";
+                updateT2Sim(300);
             }
-            updateGasLaw(slider.value);
         }
 
-        function updateGasLaw(val) {
+        function updateT2Sim(val) {
             val = parseFloat(val);
-            if(gasLaw === 'boyle') {
-                volume2 = val;
-                temperature2 = 300;
-                pressure2 = +(3.0 / volume2).toFixed(2);
-                document.getElementById('t2-slider-val').textContent = volume2.toFixed(1) + ' L';
-            } else if(gasLaw === 'charles') {
-                temperature2 = val;
-                pressure2 = 1.0;
-                volume2 = +(1.0 + (temperature2 - 150) / 100).toFixed(2);
-                document.getElementById('t2-slider-val').textContent = temperature2 + ' K';
+            if (t2Law === 'boyle') {
+                t2Vol = val;
+                t2Temp = 300;
+                t2Pres = +(3.0 / t2Vol).toFixed(2);
+                document.getElementById('t2-slider-val').textContent = t2Vol.toFixed(1) + ' L';
+            } else if (t2Law === 'charles') {
+                t2Temp = val;
+                t2Pres = 1.0;
+                t2Vol = +(t2Temp / 100).toFixed(2); // 300K -> 3.0 L
+                document.getElementById('t2-slider-val').textContent = Math.round(t2Temp) + ' K';
             } else {
-                temperature2 = val;
-                volume2 = 3.0;
-                pressure2 = +(temperature2 / 300).toFixed(2);
-                document.getElementById('t2-slider-val').textContent = temperature2 + ' K';
+                t2Temp = val;
+                t2Vol = 3.0;
+                t2Pres = +(t2Temp / 300).toFixed(2);
+                document.getElementById('t2-slider-val').textContent = Math.round(t2Temp) + ' K';
             }
-            document.getElementById('t2-p').textContent = pressure2 + ' atm';
-            document.getElementById('t2-v').textContent = volume2.toFixed(1) + ' L';
-            document.getElementById('t2-t').textContent = temperature2 + ' K';
+
+            document.getElementById('t2-p').textContent = t2Pres.toFixed(2) + ' atm';
+            document.getElementById('t2-v').textContent = t2Vol.toFixed(1) + ' L';
+            document.getElementById('t2-t').textContent = Math.round(t2Temp) + ' K';
         }
 
-        function runT2(ctx) {
-            ctx.clearRect(0, 0, 420, 380);
-            let containerHeight = 80 + (volume2 / 5.0) * 220;
-            let topWall = 340 - containerHeight;
+        function drawT2() {
+            ctx2.clearRect(0, 0, c2.width, c2.height);
 
-            ctx.strokeStyle = '#f97316'; ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.moveTo(50, 340); ctx.lineTo(50, topWall);
-            ctx.moveTo(370, 340); ctx.lineTo(370, topWall);
-            ctx.moveTo(50, 340); ctx.lineTo(370, 340);
-            ctx.stroke();
+            // Escala de litros en el cilindro (1.0 L a 5.0 L)
+            const cylLeft = 90, cylRight = 370, cylBottom = 355;
+            const maxH = 260; // para 5.0 L
+            let currentH = (t2Vol / 5.0) * maxH;
+            let pistonY = cylBottom - currentH;
 
-            ctx.fillStyle = '#ea580c';
-            ctx.fillRect(45, topWall - 10, 330, 10);
+            // Marcas de graduación en Litros a la izquierda
+            ctx2.fillStyle = '#94a3b8';
+            ctx2.font = '12px Segoe UI';
+            for (let l = 1; l <= 5; l++) {
+                let yMark = cylBottom - (l / 5.0) * maxH;
+                ctx2.fillText(l + '.0 L', 45, yMark + 4);
+                ctx2.strokeStyle = '#334155';
+                ctx2.lineWidth = 1;
+                ctx2.beginPath();
+                ctx2.moveTo(82, yMark);
+                ctx2.lineTo(90, yMark);
+                ctx2.stroke();
+            }
 
-            let bounds = { left: 52, right: 368, top: topWall, bottom: 338 };
-            let speedFactor = Math.sqrt(temperature2 / 300);
+            // Vástago y Émbolo
+            ctx2.fillStyle = '#475569';
+            ctx2.fillRect((cylLeft + cylRight) / 2 - 8, 20, 16, pistonY - 20);
+            ctx2.fillStyle = '#f97316';
+            ctx2.fillRect(cylLeft + 2, pistonY - 14, (cylRight - cylLeft) - 4, 14);
 
-            particles2.forEach(p => {
-                p.update(bounds, speedFactor);
-                p.draw(ctx);
+            // Paredes del cilindro
+            ctx2.strokeStyle = '#f8fafc';
+            ctx2.lineWidth = 3.5;
+            ctx2.beginPath();
+            ctx2.moveTo(cylLeft, 65);
+            ctx2.lineTo(cylLeft, cylBottom);
+            ctx2.lineTo(cylRight, cylBottom);
+            ctx2.lineTo(cylRight, 65);
+            ctx2.stroke();
+
+            // Partículas del gas
+            let spdFactor = Math.sqrt(t2Temp / 300) * 1.45;
+            t2Particles.forEach(p => {
+                p.x += p.vx * spdFactor;
+                p.y += p.vy * spdFactor;
+
+                if (p.x - p.r < cylLeft) { p.x = cylLeft + p.r; p.vx *= -1; }
+                if (p.x + p.r > cylRight) { p.x = cylRight - p.r; p.vx *= -1; }
+                if (p.y - p.r < pistonY) { p.y = pistonY + p.r; p.vy = Math.abs(p.vy); }
+                if (p.y + p.r > cylBottom) { p.y = cylBottom - p.r; p.vy = -Math.abs(p.vy); }
+
+                ctx2.beginPath();
+                ctx2.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx2.fillStyle = t2Temp > 360 ? '#ef4444' : (t2Temp < 240 ? '#38bdf8' : '#f97316');
+                ctx2.fill();
             });
         }
 
-        // ================= PESTAÑA 3 LOGICA =================
-        let waterTemp = 20;
-        let particles3 = [];
-        for(let i=0; i<30; i++) {
-            particles3.push(new Particle(80 + Math.random()*260, 150 + Math.random()*150, (Math.random()-0.5)*2, (Math.random()-0.5)*2, 6, '#38bdf8'));
+        // ================= LÓGICA PESTAÑA 3 (AGUA) =================
+        const c3 = document.getElementById('canvas3');
+        const ctx3 = c3.getContext('2d');
+        let waterT = 25;
+        let wParticles = [];
+
+        for (let i = 0; i < 28; i++) {
+            let col = i % 7;
+            let row = Math.floor(i / 7);
+            let bx = 115 + col * 38;
+            let by = 95 + row * 35;
+            wParticles.push({
+                x: bx, y: by, baseX: bx, baseY: by,
+                vx: (Math.random() - 0.5) * 3,
+                vy: (Math.random() - 0.5) * 3,
+                r: 6.5
+            });
         }
 
-        function updateWaterPhase(val) {
-            waterTemp = parseInt(val);
-            document.getElementById('t3-temp-val').textContent = waterTemp + ' °C';
-            let phaseStr = "Agua Líquida";
-            if (waterTemp < 0) phaseStr = "Hielo / Sólido";
-            else if (waterTemp === 0) phaseStr = "Fusión (Hielo ⇌ Líquido)";
-            else if (waterTemp > 0 && waterTemp < 100) phaseStr = "Agua Líquida";
-            else if (waterTemp === 100) phaseStr = "Vaporización (Líquido ⇌ Gas)";
-            else phaseStr = "Vapor de Agua / Gas";
-
-            document.getElementById('t3-phase').textContent = phaseStr;
+        function setQuickWater(tempVal) {
+            document.getElementById('t3-slider').value = tempVal;
+            updateT3Water(tempVal);
         }
 
-        function runT3(ctx) {
-            ctx.clearRect(0, 0, 420, 380);
-            ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3;
-            ctx.strokeRect(60, 60, 300, 260);
+        function updateT3Water(val) {
+            waterT = parseInt(val);
+            document.getElementById('t3-temp-display').textContent = waterT + ' °C';
+            document.getElementById('t3-kelvin').textContent = (waterT + 273) + ' K';
 
-            let bounds = { left: 62, right: 358, top: 62, bottom: 318 };
-            let speedFactor = Math.max(0.2, (waterTemp + 25) / 50);
+            const badge = document.getElementById('t3-badge');
+            const stTxt = document.getElementById('t3-state-txt');
+            const forces = document.getElementById('t3-forces');
 
-            particles3.forEach((p, idx) => {
-                if (waterTemp < 0) {
-                    p.x = 90 + (idx % 6) * 45;
-                    p.y = 90 + Math.floor(idx / 6) * 40;
-                    p.draw(ctx);
-                } else {
-                    p.update(bounds, speedFactor);
-                    p.draw(ctx);
+            if (waterT < 0) {
+                badge.textContent = "Fase: Hielo Sólido (Red hexagonal rígida de puentes de hidrógeno)";
+                stTxt.textContent = "Sólido (Hielo)";
+                forces.textContent = "Muy Fuertes";
+            } else if (waterT === 0) {
+                badge.textContent = "Equilibrio Térmico a 0 °C: Fusión (Hielo ⇌ Agua Líquida)";
+                stTxt.textContent = "Fusión";
+                forces.textContent = "Transición";
+            } else if (waterT > 0 && waterT < 100) {
+                badge.textContent = "Fase: Agua Líquida (Moléculas fluídas en contacto continuo)";
+                stTxt.textContent = "Líquido";
+                forces.textContent = "Medias";
+            } else if (waterT === 100) {
+                badge.textContent = "Equilibrio Térmico a 100 °C: Ebullición (Agua ⇌ Vapor)";
+                stTxt.textContent = "Ebullición";
+                forces.textContent = "Rompiéndose";
+            } else {
+                badge.textContent = "Fase: Vapor de Agua (Gas libre a alta velocidad)";
+                stTxt.textContent = "Gas (Vapor)";
+                forces.textContent = "Nulas";
+            }
+        }
+
+        function drawT3() {
+            ctx3.clearRect(0, 0, c3.width, c3.height);
+
+            // Zona superior: Recipiente (alto 235px)
+            const wBox = { left: 60, right: 400, top: 25, bottom: 255 };
+            ctx3.strokeStyle = '#38bdf8';
+            ctx3.lineWidth = 2.5;
+            ctx3.strokeRect(wBox.left, wBox.top, wBox.right - wBox.left, wBox.bottom - wBox.top);
+
+            // Enlaces si es hielo
+            if (waterT <= 0) {
+                ctx3.strokeStyle = 'rgba(56, 189, 248, 0.45)';
+                ctx3.lineWidth = 1.5;
+                for (let i = 0; i < wParticles.length; i++) {
+                    for (let j = i + 1; j < wParticles.length; j++) {
+                        let dist = Math.hypot(wParticles[i].x - wParticles[j].x, wParticles[i].y - wParticles[j].y);
+                        if (dist < 46) {
+                            ctx3.beginPath();
+                            ctx3.moveTo(wParticles[i].x, wParticles[i].y);
+                            ctx3.lineTo(wParticles[j].x, wParticles[j].y);
+                            ctx3.stroke();
+                        }
+                    }
                 }
+            }
+
+            wParticles.forEach((p, idx) => {
+                if (waterT < 0) {
+                    p.x = p.baseX + Math.sin(Date.now() * 0.015 + idx) * 2;
+                    p.y = p.baseY + Math.cos(Date.now() * 0.015 + idx) * 2;
+                } else if (waterT >= 0 && waterT < 100) {
+                    let factor = 0.5 + (waterT / 100) * 1.1;
+                    p.vy += 0.08; // gravedad líquida
+                    p.x += p.vx * factor;
+                    p.y += p.vy * factor;
+                    if (p.y < 140) p.vy += 0.12;
+                    if (p.x - p.r < wBox.left) { p.x = wBox.left + p.r; p.vx *= -1; }
+                    if (p.x + p.r > wBox.right) { p.x = wBox.right - p.r; p.vx *= -1; }
+                    if (p.y + p.r > wBox.bottom) { p.y = wBox.bottom - p.r; p.vy = -Math.abs(p.vy) * 0.85; }
+                } else {
+                    let factor = 2.0 + ((waterT - 100) / 20) * 0.8;
+                    p.x += p.vx * factor;
+                    p.y += p.vy * factor;
+                    if (p.x - p.r < wBox.left) { p.x = wBox.left + p.r; p.vx *= -1; }
+                    if (p.x + p.r > wBox.right) { p.x = wBox.right - p.r; p.vx *= -1; }
+                    if (p.y - p.r < wBox.top) { p.y = wBox.top + p.r; p.vy *= -1; }
+                    if (p.y + p.r > wBox.bottom) { p.y = wBox.bottom - p.r; p.vy *= -1; }
+                }
+
+                // Dibujar molécula H2O (Oxígeno central + 2 Hidrógenos pequeños)
+                ctx3.beginPath();
+                ctx3.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx3.fillStyle = waterT >= 100 ? '#f97316' : '#38bdf8';
+                ctx3.fill();
+
+                ctx3.beginPath();
+                ctx3.arc(p.x - 5, p.y - 4, 2.5, 0, Math.PI * 2);
+                ctx3.arc(p.x + 5, p.y - 4, 2.5, 0, Math.PI * 2);
+                ctx3.fillStyle = '#f8fafc';
+                ctx3.fill();
             });
+
+            // Zona inferior: Curva de Calentamiento (y: 280 a 370)
+            ctx3.strokeStyle = '#475569';
+            ctx3.lineWidth = 1.5;
+            ctx3.beginPath();
+            ctx3.moveTo(60, 365); ctx3.lineTo(400, 365); // Eje X (Calor)
+            ctx3.moveTo(60, 365); ctx3.lineTo(60, 275);  // Eje Y (Temp)
+            ctx3.stroke();
+
+            // Trazado de la curva clásica de fases
+            ctx3.strokeStyle = '#38bdf8';
+            ctx3.lineWidth = 2.5;
+            ctx3.beginPath();
+            ctx3.moveTo(60, 360);   // -20°C
+            ctx3.lineTo(115, 340);  // Sube a 0°C
+            ctx3.lineTo(175, 340);  // Meseta Fusión (0°C)
+            ctx3.lineTo(265, 300);  // Sube a 100°C
+            ctx3.lineTo(335, 300);  // Meseta Ebullición (100°C)
+            ctx3.lineTo(390, 280);  // Vapor (>100°C)
+            ctx3.stroke();
+
+            // Punto marcador en la curva según waterT
+            let markerX = 60, markerY = 360;
+            if (waterT < 0) {
+                let p = (waterT + 20) / 20;
+                markerX = 60 + p * 55;
+                markerY = 360 - p * 20;
+            } else if (waterT === 0) {
+                markerX = 145; markerY = 340;
+            } else if (waterT > 0 && waterT < 100) {
+                let p = waterT / 100;
+                markerX = 175 + p * 90;
+                markerY = 340 - p * 40;
+            } else if (waterT === 100) {
+                markerX = 300; markerY = 300;
+            } else {
+                let p = (waterT - 100) / 20;
+                markerX = 335 + p * 55;
+                markerY = 300 - p * 20;
+            }
+
+            ctx3.beginPath();
+            ctx3.arc(markerX, markerY, 6, 0, Math.PI * 2);
+            ctx3.fillStyle = '#f97316';
+            ctx3.fill();
+
+            ctx3.fillStyle = '#94a3b8';
+            ctx3.font = '11px Segoe UI';
+            ctx3.fillText('0°C (Fusión)', 120, 355);
+            ctx3.fillText('100°C (Ebullición)', 270, 315);
         }
 
-        //
+        // Bucle principal de animación
+        function animateAll() {
+            drawT1();
+            drawT2();
+            drawT3();
+            requestAnimationFrame(animateAll);
+        }
+        animateAll();
+    </script>
+</body>
+</html>
